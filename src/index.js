@@ -1,10 +1,7 @@
 import React from 'react';
-import {Text, SafeAreaView} from 'react-native';
+
+import {TodoList} from './pages/TodoList';
 
 export const App = () => {
-  return (
-    <SafeAreaView>
-      <Text>Hello World</Text>
-    </SafeAreaView>
-  );
+  return <TodoList />;
 };
