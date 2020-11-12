@@ -14,7 +14,7 @@ import {
   Task,
   TaskListContent,
   TaskListItem,
-  DeleteTaskButton
+  DeleteTaskButton,
 } from './styles';
 
 interface CheckBoxTask {
@@ -28,12 +28,12 @@ export const TodoList = () => {
   // const [toggleCheckBox, setToggleCheckBox] = useState<CheckBoxTask[]>([]);
 
   function handleAddNewTask() {
-    setTasks([ ...tasks, newTask ]);
+    setTasks([...tasks, newTask]);
     setNewTask('');
   }
 
   function handleRemoveTask(task: string) {
-    setTasks(tasks.filter(taskItem => taskItem !== task))
+    setTasks(tasks.filter((taskItem) => taskItem !== task));
   }
 
   return (
@@ -44,8 +44,8 @@ export const TodoList = () => {
 
       <NewTaskFormContent>
         <NewTaskInput
-          placeholder='New Task'
-          onChangeText={text => setNewTask(text)}
+          placeholder="New Task"
+          onChangeText={(text) => setNewTask(text)}
           value={newTask}
         />
         <NewTaskButton onPress={handleAddNewTask} activeOpacity={0.6}>
@@ -56,22 +56,18 @@ export const TodoList = () => {
       <TaskListContent>
         <FlatList
           data={tasks}
-          keyExtractor={task => task}
+          keyExtractor={(task) => task}
           renderItem={({ item: task }) => (
             <TaskListItem>
-            <CheckBox
-              disabled={false}
-              // value={toggleCheckBox}
-              // onValueChange={(newValue) => setToggleCheckBox(newValue)}
-            />
-            <Task>{task}</Task>
-            <DeleteTaskButton onPress={() => handleRemoveTask(task)}>
-              <ButtonText>X</ButtonText>
-            </DeleteTaskButton>
+              <CheckBox disabled={false} />
+              <Task>{task}</Task>
+              <DeleteTaskButton onPress={() => handleRemoveTask(task)}>
+                <ButtonText>X</ButtonText>
+              </DeleteTaskButton>
             </TaskListItem>
           )}
         />
       </TaskListContent>
     </Container>
   );
-}
+};
