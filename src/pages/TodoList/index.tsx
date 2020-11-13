@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 
 import CheckBox from '@react-native-community/checkbox';
+import logo from '../../assets/images/logo_horizontal.png';
 
 import {
   Container,
@@ -9,12 +10,13 @@ import {
   NewTaskFormContent,
   NewTaskButton,
   ButtonText,
-  Title,
   NewTaskInput,
   Task,
   TaskListContent,
   TaskListItem,
   DeleteTaskButton,
+  DeleteTaskContent,
+  LogoImage,
 } from './styles';
 
 interface Task {
@@ -27,7 +29,7 @@ export const TodoList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
-  useEffect(() => {}, [tasks, setToggleCheckBox]);
+  useEffect(() => {}, [tasks]);
 
   function handleAddNewTask() {
     if (newTask) {
@@ -37,7 +39,7 @@ export const TodoList = () => {
   }
 
   function handleRemoveTask(taskName: string) {
-    setTasks(tasks.filter((taskItem) => taskItem.name !== taskName));
+    setTasks(tasks.filter(taskItem => taskItem.name !== taskName));
   }
 
   function handleSwitchTaskChecked(check: boolean, task: Task) {
@@ -45,42 +47,49 @@ export const TodoList = () => {
     task.isChecked = check;
   }
 
-  return (
-    <Container>
-      <TitleContent>
-        <Title>Done</Title>
-      </TitleContent>
-
-      <NewTaskFormContent>
-        <NewTaskInput
-          placeholder="New Task"
-          onChangeText={(text) => setNewTask(text)}
-          value={newTask}
-        />
-        <NewTaskButton onPress={handleAddNewTask} activeOpacity={0.6}>
-          <ButtonText>+</ButtonText>
-        </NewTaskButton>
-      </NewTaskFormContent>
-
+  function renderTasks() {
+    return (
       <TaskListContent>
         <FlatList
           data={tasks}
-          keyExtractor={(item) => item.name}
+          keyExtractor={item => item.name}
           renderItem={({ item: task }) => (
-            <TaskListItem>
+            <TaskListItem isChecked={task.isChecked}>
               <CheckBox
                 disabled={false}
                 value={task.isChecked}
                 onChange={() => handleSwitchTaskChecked(!task.isChecked, task)}
               />
               <Task isChecked={task.isChecked}>{task.name}</Task>
-              <DeleteTaskButton onPress={() => handleRemoveTask(task.name)}>
-                <ButtonText>X</ButtonText>
-              </DeleteTaskButton>
+              <DeleteTaskContent>
+                <DeleteTaskButton onPress={() => handleRemoveTask(task.name)}>
+                  <ButtonText>X</ButtonText>
+                </DeleteTaskButton>
+              </DeleteTaskContent>
             </TaskListItem>
           )}
         />
       </TaskListContent>
+    );
+  }
+
+  return (
+    <Container>
+      <TitleContent>
+        <LogoImage source={logo} resizeMode="contain" />
+      </TitleContent>
+
+      <NewTaskFormContent>
+        <NewTaskInput
+          placeholder="New Task"
+          onChangeText={text => setNewTask(text)}
+          value={newTask}
+        />
+        <NewTaskButton onPress={handleAddNewTask} activeOpacity={0.6}>
+          <ButtonText>+</ButtonText>
+        </NewTaskButton>
+      </NewTaskFormContent>
+      {renderTasks()}
     </Container>
   );
 };
