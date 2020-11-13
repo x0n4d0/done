@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, {css} from 'styled-components/native';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -67,10 +67,16 @@ export const NewTaskInput = styled.TextInput`
   font-size: 20px;
 `
 
+interface Task {
+  isChecked: boolean;
+}
+
 export const Task = styled.Text`
   font-size: 25px;
   font-weight: bold;
   padding: 10px;
-  color: green;
+
+  color: ${({ isChecked }: Task) => isChecked ? '#dcdcdc' : 'green'};
+  text-decoration: ${({ isChecked }: Task) => isChecked ? 'line-through' : 'none'};
 `
 

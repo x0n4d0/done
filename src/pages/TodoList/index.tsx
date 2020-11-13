@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 
 import CheckBox from '@react-native-community/checkbox';
@@ -17,29 +17,38 @@ import {
   DeleteTaskButton,
 } from './styles';
 
-interface CheckBoxTask {
-  taskName: string;
+interface Task {
+  name: string;
   isChecked: boolean;
 }
 
 export const TodoList = () => {
   const [newTask, setNewTask] = useState('');
-  const [tasks, setTasks] = useState<string[]>([]);
-  // const [toggleCheckBox, setToggleCheckBox] = useState<CheckBoxTask[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
+
+  useEffect(() => {}, [tasks, setToggleCheckBox]);
 
   function handleAddNewTask() {
-    setTasks([...tasks, newTask]);
-    setNewTask('');
+    if (newTask) {
+      setTasks([...tasks, { name: newTask, isChecked: false }]);
+      setNewTask('');
+    }
   }
 
-  function handleRemoveTask(task: string) {
-    setTasks(tasks.filter((taskItem) => taskItem !== task));
+  function handleRemoveTask(taskName: string) {
+    setTasks(tasks.filter((taskItem) => taskItem.name !== taskName));
+  }
+
+  function handleSwitchTaskChecked(check: boolean, task: Task) {
+    setToggleCheckBox(check);
+    task.isChecked = check;
   }
 
   return (
     <Container>
       <TitleContent>
-        <Title>TODO LIST</Title>
+        <Title>Done</Title>
       </TitleContent>
 
       <NewTaskFormContent>
@@ -56,12 +65,16 @@ export const TodoList = () => {
       <TaskListContent>
         <FlatList
           data={tasks}
-          keyExtractor={(task) => task}
+          keyExtractor={(item) => item.name}
           renderItem={({ item: task }) => (
             <TaskListItem>
-              <CheckBox disabled={false} />
-              <Task>{task}</Task>
-              <DeleteTaskButton onPress={() => handleRemoveTask(task)}>
+              <CheckBox
+                disabled={false}
+                value={task.isChecked}
+                onChange={() => handleSwitchTaskChecked(!task.isChecked, task)}
+              />
+              <Task isChecked={task.isChecked}>{task.name}</Task>
+              <DeleteTaskButton onPress={() => handleRemoveTask(task.name)}>
                 <ButtonText>X</ButtonText>
               </DeleteTaskButton>
             </TaskListItem>
